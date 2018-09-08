@@ -60,6 +60,7 @@
     <Compile Include="Checksum\Adler32Tests.cs" />
     <Compile Include="Checksum\FletcherTests.cs" />
     <Compile Include="Crc\Crc32Tests.cs" />
+    <Compile Include="Crc\Crc64Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
