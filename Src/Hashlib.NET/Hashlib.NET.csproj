@@ -13,5 +13,11 @@
     </PackageReference>
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Folder Include="Checksum\" />
+    <Folder Include="Common\" />
+    <Folder Include="Crc\" />
+  </ItemGroup>
+
 </Project>
