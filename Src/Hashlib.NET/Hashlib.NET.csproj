@@ -17,7 +17,8 @@
   <ItemGroup>
     <Folder Include="Checksum\" />
     <Folder Include="Common\" />
-    <Folder Include="Crc\"/>
+    <Folder Include="Crc\" />
+    <Folder Include="NonCryptographic\" />
   </ItemGroup>
 
 </Project>

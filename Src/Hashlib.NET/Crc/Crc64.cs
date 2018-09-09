@@ -153,6 +153,10 @@ namespace Hashlib.NET.Crc
             _hash = ~crc;  // same as crc ^ 0xFFFFFFFF
         }
 
+        /// <summary>
+        /// Finalizes the hash computation after the last data is processed by the cryptographic stream object.
+        /// </summary>
+        /// <returns>The computed hash as a byte array.</returns>
         protected override byte[] HashFinal() => BitConverter.GetBytes(_hash);
 
         private ulong[] InitializeTable(ulong polynomial)

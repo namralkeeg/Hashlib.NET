@@ -35,8 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +63,8 @@
     <Compile Include="Checksum\FletcherTests.cs" />
     <Compile Include="Crc\Crc32Tests.cs" />
     <Compile Include="Crc\Crc64Tests.cs" />
+    <Compile Include="NonCryptographic\Fnv1aTests.cs" />
+    <Compile Include="NonCryptographic\Fnv1Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
