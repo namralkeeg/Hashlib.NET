@@ -63,6 +63,7 @@
     <Compile Include="Checksum\FletcherTests.cs" />
     <Compile Include="Crc\Crc32Tests.cs" />
     <Compile Include="Crc\Crc64Tests.cs" />
+    <Compile Include="NonCryptographic\ApTests.cs" />
     <Compile Include="NonCryptographic\Fnv1aTests.cs" />
     <Compile Include="NonCryptographic\Fnv1Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
