@@ -66,6 +66,7 @@
     <Compile Include="NonCryptographic\ApTests.cs" />
     <Compile Include="NonCryptographic\BkdrTests.cs" />
     <Compile Include="NonCryptographic\DekTests.cs" />
+    <Compile Include="NonCryptographic\Djb2Tests.cs" />
     <Compile Include="NonCryptographic\Fnv1aTests.cs" />
     <Compile Include="NonCryptographic\Fnv1Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
