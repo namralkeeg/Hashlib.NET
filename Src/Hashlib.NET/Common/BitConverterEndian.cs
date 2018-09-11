@@ -167,6 +167,68 @@ namespace Hashlib.NET.Common
             return GetBytesBE((long)value);
         }
 
+        [System.Security.SecuritySafeCritical]
+        public static unsafe byte[] GetBytesLE(short value)
+        {
+            byte[] bytes = new byte[2];
+            fixed (byte* pbyte = bytes)
+            {
+                *(pbyte + 0) = (byte)(value >> 0);
+                *(pbyte + 1) = (byte)(value >> 8);
+            }
+
+            return bytes;
+        }
+
+        [System.Security.SecuritySafeCritical]
+        public static unsafe byte[] GetBytesLE(int value)
+        {
+            byte[] bytes = new byte[4];
+            fixed (byte* pbyte = bytes)
+            {
+                *(pbyte + 0) = (byte)(value >> 0);
+                *(pbyte + 1) = (byte)(value >> 8);
+                *(pbyte + 2) = (byte)(value >> 16);
+                *(pbyte + 3) = (byte)(value >> 24);
+            }
+
+            return bytes;
+        }
+
+        [System.Security.SecuritySafeCritical]
+        public static unsafe byte[] GetBytesLE(long value)
+        {
+            byte[] bytes = new byte[8];
+            fixed (byte* pbyte = bytes)
+            {
+                *(pbyte + 0) = (byte)(value >> 0);
+                *(pbyte + 1) = (byte)(value >> 8);
+                *(pbyte + 2) = (byte)(value >> 16);
+                *(pbyte + 3) = (byte)(value >> 24);
+                *(pbyte + 4) = (byte)(value >> 32);
+                *(pbyte + 5) = (byte)(value >> 40);
+                *(pbyte + 6) = (byte)(value >> 48);
+                *(pbyte + 7) = (byte)(value >> 56);
+            }
+
+            return bytes;
+        }
+
+        public static unsafe byte[] GetBytesLE(ushort value)
+        {
+            return GetBytesLE((short)value);
+        }
+
+        public static unsafe byte[] GetBytesLE(uint value)
+        {
+            return GetBytesLE((int)value);
+        }
+
+        public static unsafe byte[] GetBytesLE(ulong value)
+        {
+            return GetBytesLE((long)value);
+        }
+
 #endif
     }
 }
