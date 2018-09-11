@@ -75,6 +75,7 @@
     <Compile Include="NonCryptographic\Pjw32Tests.cs" />
     <Compile Include="NonCryptographic\RsTests.cs" />
     <Compile Include="NonCryptographic\SaxTests.cs" />
+    <Compile Include="NonCryptographic\SdbmTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
