@@ -71,6 +71,7 @@
     <Compile Include="NonCryptographic\Fnv1aTests.cs" />
     <Compile Include="NonCryptographic\Fnv1Tests.cs" />
     <Compile Include="NonCryptographic\JoaatTests.cs" />
+    <Compile Include="NonCryptographic\JsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
