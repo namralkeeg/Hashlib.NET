@@ -76,6 +76,7 @@
     <Compile Include="NonCryptographic\RsTests.cs" />
     <Compile Include="NonCryptographic\SaxTests.cs" />
     <Compile Include="NonCryptographic\SdbmTests.cs" />
+    <Compile Include="NonCryptographic\SuperFastTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
