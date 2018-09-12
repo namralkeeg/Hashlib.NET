@@ -103,6 +103,184 @@ namespace Hashlib.NET.Common
             return GetBytesLE((long)value);
         }
 
+        internal static short ToInt16BE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            return (short)
+                (
+                (value[0] << 8) |
+                (value[1] << 0)
+                );
+        }
+
+        internal static int ToInt32BE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            return (int)
+                (
+                (value[0] << 24) |
+                (value[1] << 16) |
+                (value[2] << 08) |
+                (value[3] << 00)
+                );
+        }
+
+        internal static long ToInt64BE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            return (long)
+                (
+                (value[0] << 56) |
+                (value[1] << 48) |
+                (value[2] << 40) |
+                (value[3] << 32) |
+                (value[4] << 24) |
+                (value[5] << 16) |
+                (value[6] << 08) |
+                (value[7] << 00)
+                );
+        }
+
+        internal static ushort ToUInt16BE(byte[] value, int startIndex)
+        {
+            return (ushort)ToInt16BE(value, startIndex);
+        }
+
+        internal static uint ToUInt32BE(byte[] value, int startIndex)
+        {
+            return (uint)ToInt32BE(value, startIndex);
+        }
+
+        internal static ulong ToUInt64BE(byte[] value, int startIndex)
+        {
+            return (ulong)ToInt64BE(value, startIndex);
+        }
+
+        internal static short ToInt16LE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            return (short)
+                (
+                (value[0] << 0) |
+                (value[1] << 8)
+                );
+        }
+
+        internal static int ToInt32LE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            return (int)
+                (
+                (value[0] << 00) |
+                (value[1] << 08) |
+                (value[2] << 16) |
+                (value[3] << 24)
+                );
+        }
+
+        internal static long ToInt64LE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            return (long)
+                (
+                (value[0] << 00) |
+                (value[1] << 08) |
+                (value[2] << 16) |
+                (value[4] << 32) |
+                (value[5] << 40) |
+                (value[3] << 24) |
+                (value[6] << 48) |
+                (value[7] << 56)
+                );
+        }
+
+        internal static ushort ToUInt16LE(byte[] value, int startIndex)
+        {
+            return (ushort)ToInt16LE(value, startIndex);
+        }
+
+        internal static uint ToUInt32LE(byte[] value, int startIndex)
+        {
+            return (uint)ToInt32LE(value, startIndex);
+        }
+
+        internal static ulong ToUInt64LE(byte[] value, int startIndex)
+        {
+            return (ulong)ToInt64LE(value, startIndex);
+        }
+
 #else
 
         [System.Security.SecuritySafeCritical]
@@ -229,6 +407,201 @@ namespace Hashlib.NET.Common
             return GetBytesLE((long)value);
         }
 
+        public static unsafe short ToInt16BE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &value[startIndex])
+            {
+                return (short)
+                    (
+                    (*(pbyte + 0) << 8) |
+                    (*(pbyte + 1))
+                    );
+            }
+        }
+
+        public static unsafe int ToInt32BE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &value[startIndex])
+            {
+                return (int)
+                    (
+                    (*(pbyte + 0) << 24) |
+                    (*(pbyte + 1) << 16) |
+                    (*(pbyte + 2) << 8) |
+                    (*(pbyte + 3))
+                    );
+            }
+        }
+
+        public static unsafe long ToInt64BE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &value[startIndex])
+            {
+                return (long)
+                (
+                (*(pbyte + 0) << 56) |
+                (*(pbyte + 1) << 48) |
+                (*(pbyte + 2) << 40) |
+                (*(pbyte + 3) << 32) |
+                (*(pbyte + 4) << 24) |
+                (*(pbyte + 5) << 16) |
+                (*(pbyte + 6) << 8) |
+                (*(pbyte + 7))
+                );
+            }
+        }
+
+        public static unsafe ushort ToUInt16BE(byte[] value, int startIndex)
+        {
+            return (ushort)ToInt16BE(value, startIndex);
+        }
+
+        public static unsafe uint ToUInt32BE(byte[] value, int startIndex)
+        {
+            return (uint)ToInt32BE(value, startIndex);
+        }
+
+        public static unsafe ulong ToUInt64BE(byte[] value, int startIndex)
+        {
+            return (ulong)ToInt64BE(value, startIndex);
+        }
+
+        public static unsafe short ToInt16LE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &value[startIndex])
+            {
+                return (short)
+                    (
+                    (*(pbyte + 0)) |
+                    (*(pbyte + 1) << 8)
+                    );
+            }
+        }
+
+        public static unsafe int ToInt32LE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &value[startIndex])
+            {
+                return (int)
+                    (
+                    (*(pbyte + 0)) |
+                    (*(pbyte + 1) << 8) |
+                    (*(pbyte + 2) << 16) |
+                    (*(pbyte + 3) << 24)
+                    );
+            }
+        }
+
+        public static unsafe long ToInt64LE(byte[] value, int startIndex)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > value.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &value[startIndex])
+            {
+                return (long)
+                (
+                (*(pbyte + 0)) |
+                (*(pbyte + 1) << 8) |
+                (*(pbyte + 2) << 16) |
+                (*(pbyte + 3) << 24) |
+                (*(pbyte + 4) << 32) |
+                (*(pbyte + 5) << 40) |
+                (*(pbyte + 6) << 48) |
+                (*(pbyte + 7) << 56)
+                );
+            }
+        }
+
+        public static unsafe ushort ToUInt16LE(byte[] value, int startIndex)
+        {
+            return (ushort)ToInt16LE(value, startIndex);
+        }
+
+        public static unsafe uint ToUInt32LE(byte[] value, int startIndex)
+        {
+            return (uint)ToInt32LE(value, startIndex);
+        }
+
+        public static unsafe ulong ToUInt64LE(byte[] value, int startIndex)
+        {
+            return (ulong)ToInt64LE(value, startIndex);
+        }
 #endif
     }
 }
