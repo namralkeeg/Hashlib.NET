@@ -34,6 +34,7 @@ namespace Hashlib.NET.NonCryptographic
     /// <summary>
     /// A XxHash 32-bit hash implementation of the <see cref="HashAlgorithm"/> class.
     /// </summary>
+    /// <remarks>XXHash 32-bit, based on Yann Collet's descriptions, see http://cyan4973.github.io/xxHash/ </remarks>
     public sealed class XxHash32 : HashAlgorithm
     {
         #region Fields

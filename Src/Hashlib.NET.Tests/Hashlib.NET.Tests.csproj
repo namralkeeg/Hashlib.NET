@@ -78,6 +78,7 @@
     <Compile Include="NonCryptographic\SdbmTests.cs" />
     <Compile Include="NonCryptographic\SuperFastTests.cs" />
     <Compile Include="NonCryptographic\XxHash32Tests.cs" />
+    <Compile Include="NonCryptographic\XxHash64Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
