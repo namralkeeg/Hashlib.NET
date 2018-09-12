@@ -111,12 +111,12 @@ namespace Hashlib.NET.NonCryptographic
                 // length = length / 4;
                 length >>= 2;
 
-                //for (; length > 0; length--)
                 while (length > 0)
                 {
                     _hash += Get16Bits(array, position);
                     position += 2;
-                    temp = (uint)(Get16Bits(array, position) << 11) ^ _hash;
+                    // Calculations are Little-Endian.
+                    temp = (uint)(BitConverterEndian.ToUInt16LE(array, position) << 11) ^ _hash;
                     _hash = (_hash << 16) ^ temp;
                     position += 2;
                     _hash += _hash >> 11;
@@ -127,7 +127,8 @@ namespace Hashlib.NET.NonCryptographic
                 switch (remainder)
                 {
                     case 3:
-                        _hash += Get16Bits(array, position);
+                        // Calculations are Little-Endian.
+                        _hash += BitConverterEndian.ToUInt16LE(array, position);
                         position += 2;
                         _hash ^= _hash << 16;
                         _hash ^= (byte)(array[position] << 18);
@@ -135,7 +136,8 @@ namespace Hashlib.NET.NonCryptographic
                         break;
 
                     case 2:
-                        _hash += Get16Bits(array, position);
+                        // Calculations are Little-Endian.
+                        _hash += BitConverterEndian.ToUInt16LE(array, position);
                         _hash ^= _hash << 11;
                         _hash += _hash >> 17;
                         break;

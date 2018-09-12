@@ -96,7 +96,8 @@ namespace Hashlib.NET.Checksum
             {
                 for (i = 0; i < 360; i++)
                 {
-                    _sum1 += Get16Bits(array, index);
+                    // Calculations are Little-Endian.
+                    _sum1 += BitConverterEndian.ToUInt16LE(array, index);
                     _sum2 += _sum1;
                     index += _BlockSize;
                 }
@@ -107,7 +108,8 @@ namespace Hashlib.NET.Checksum
 
             for (i = 0; i < length; ++i)
             {
-                _sum1 += Get16Bits(array, index);
+                // Calculations are Little-Endian.
+                _sum1 += BitConverterEndian.ToUInt16LE(array, index);
                 _sum2 += _sum1;
                 index += _BlockSize;
             }
@@ -130,11 +132,6 @@ namespace Hashlib.NET.Checksum
         {
             uint hash = _sum2 << 16 | _sum1;
             return BitConverter.GetBytes(hash);
-        }
-
-        private ushort Get16Bits(byte[] array, int pos)
-        {
-            return (ushort)((array[pos + 1] << 8) | array[pos]);
         }
     }
 }
