@@ -120,8 +120,8 @@ namespace Hashlib.NET.Common
 
             return (short)
                 (
-                (value[0] << 8) |
-                (value[1] << 0)
+                (value[startIndex + 0] << 8) |
+                (value[startIndex + 1] << 0)
                 );
         }
 
@@ -142,10 +142,10 @@ namespace Hashlib.NET.Common
 
             return (int)
                 (
-                (value[0] << 24) |
-                (value[1] << 16) |
-                (value[2] << 08) |
-                (value[3] << 00)
+                (value[startIndex + 0] << 24) |
+                (value[startIndex + 1] << 16) |
+                (value[startIndex + 2] << 08) |
+                (value[startIndex + 3] << 00)
                 );
         }
 
@@ -166,14 +166,14 @@ namespace Hashlib.NET.Common
 
             return (long)
                 (
-                (value[0] << 56) |
-                (value[1] << 48) |
-                (value[2] << 40) |
-                (value[3] << 32) |
-                (value[4] << 24) |
-                (value[5] << 16) |
-                (value[6] << 08) |
-                (value[7] << 00)
+                (value[startIndex + 0] << 56) |
+                (value[startIndex + 1] << 48) |
+                (value[startIndex + 2] << 40) |
+                (value[startIndex + 3] << 32) |
+                (value[startIndex + 4] << 24) |
+                (value[startIndex + 5] << 16) |
+                (value[startIndex + 6] << 08) |
+                (value[startIndex + 7] << 00)
                 );
         }
 
@@ -209,8 +209,8 @@ namespace Hashlib.NET.Common
 
             return (short)
                 (
-                (value[0] << 0) |
-                (value[1] << 8)
+                (value[startIndex + 0] << 0) |
+                (value[startIndex + 1] << 8)
                 );
         }
 
@@ -231,10 +231,10 @@ namespace Hashlib.NET.Common
 
             return (int)
                 (
-                (value[0] << 00) |
-                (value[1] << 08) |
-                (value[2] << 16) |
-                (value[3] << 24)
+                (value[startIndex + 0] << 00) |
+                (value[startIndex + 1] << 08) |
+                (value[startIndex + 2] << 16) |
+                (value[startIndex + 3] << 24)
                 );
         }
 
@@ -255,14 +255,14 @@ namespace Hashlib.NET.Common
 
             return (long)
                 (
-                (value[0] << 00) |
-                (value[1] << 08) |
-                (value[2] << 16) |
-                (value[4] << 32) |
-                (value[5] << 40) |
-                (value[3] << 24) |
-                (value[6] << 48) |
-                (value[7] << 56)
+                (value[startIndex + 0] << 00) |
+                (value[startIndex + 1] << 08) |
+                (value[startIndex + 2] << 16) |
+                (value[startIndex + 4] << 32) |
+                (value[startIndex + 5] << 40) |
+                (value[startIndex + 3] << 24) |
+                (value[startIndex + 6] << 48) |
+                (value[startIndex + 7] << 56)
                 );
         }
 
