@@ -61,8 +61,10 @@
   <ItemGroup>
     <Compile Include="Checksum\Adler32Tests.cs" />
     <Compile Include="Checksum\FletcherTests.cs" />
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="Crc\Crc32Tests.cs" />
     <Compile Include="Crc\Crc64Tests.cs" />
+    <Compile Include="Cryptographic\MD5Tests.cs" />
     <Compile Include="NonCryptographic\ApTests.cs" />
     <Compile Include="NonCryptographic\BkdrTests.cs" />
     <Compile Include="NonCryptographic\DekTests.cs" />
