@@ -852,17 +852,18 @@ namespace Hashlib.NET.Common
 
             fixed (byte* pbyte = &value[startIndex])
             {
-                return (long)
-                (
-                (*(pbyte + 0) << 56) |
-                (*(pbyte + 1) << 48) |
-                (*(pbyte + 2) << 40) |
-                (*(pbyte + 3) << 32) |
-                (*(pbyte + 4) << 24) |
-                (*(pbyte + 5) << 16) |
-                (*(pbyte + 6) << 8) |
-                (*(pbyte + 7))
-                );
+                int one =
+                    (*(pbyte + 0) << 24) |
+                    (*(pbyte + 1) << 16) |
+                    (*(pbyte + 2) << 08) |
+                    (*(pbyte + 3) << 00);
+                int two =
+                    (*(pbyte + 4) << 24) |
+                    (*(pbyte + 5) << 16) |
+                    (*(pbyte + 6) << 08) |
+                    (*(pbyte + 7) << 00);
+
+                return (uint)two | ((long)one << 32);
             }
         }
 
@@ -950,17 +951,18 @@ namespace Hashlib.NET.Common
 
             fixed (byte* pbyte = &value[startIndex])
             {
-                return (long)
-                (
-                (*(pbyte + 0)) |
-                (*(pbyte + 1) << 8) |
-                (*(pbyte + 2) << 16) |
-                (*(pbyte + 3) << 24) |
-                (*(pbyte + 4) << 32) |
-                (*(pbyte + 5) << 40) |
-                (*(pbyte + 6) << 48) |
-                (*(pbyte + 7) << 56)
-                );
+                int one =
+                    (*(pbyte + 0) << 00) |
+                    (*(pbyte + 1) << 08) |
+                    (*(pbyte + 2) << 16) |
+                    (*(pbyte + 3) << 24);
+                int two =
+                    (*(pbyte + 4) << 00) |
+                    (*(pbyte + 5) << 08) |
+                    (*(pbyte + 6) << 16) |
+                    (*(pbyte + 7) << 24);
+
+                return (uint)one | ((long)two << 32);
             }
         }
 
