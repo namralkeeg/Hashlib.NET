@@ -69,6 +69,7 @@
     <Compile Include="Cryptographic\SHA1Tests.cs" />
     <Compile Include="Cryptographic\SHA224Tests.cs" />
     <Compile Include="Cryptographic\SHA256Tests.cs" />
+    <Compile Include="Cryptographic\SHA3Tests.cs" />
     <Compile Include="NonCryptographic\ApTests.cs" />
     <Compile Include="NonCryptographic\BkdrTests.cs" />
     <Compile Include="NonCryptographic\DekTests.cs" />
