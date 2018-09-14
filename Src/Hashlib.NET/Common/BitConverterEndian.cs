@@ -31,6 +31,8 @@ namespace Hashlib.NET.Common
     internal static class BitConverterEndian
     {
 #if !UNSAFE
+        #region Get Bytes
+
         internal static byte[] GetBytesBE(short value)
         {
             byte[] bytes = new byte[sizeof(short)]; // 2
@@ -127,6 +129,174 @@ namespace Hashlib.NET.Common
             return GetBytesLE((long)value);
         }
 
+        #endregion Get Bytes
+
+        #region Set Bytes
+
+        public static void SetBytesBE(short value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            array[startIndex + 0] = (byte)(value >> 8);
+            array[startIndex + 1] = (byte)(value >> 0);
+        }
+
+        public static void SetBytesBE(int value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            array[startIndex + 0] = (byte)(value >> 24);
+            array[startIndex + 1] = (byte)(value >> 16);
+            array[startIndex + 2] = (byte)(value >> 08);
+            array[startIndex + 3] = (byte)(value >> 00);
+        }
+
+        public static void SetBytesBE(long value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            array[startIndex + 0] = (byte)(value >> 56);
+            array[startIndex + 1] = (byte)(value >> 48);
+            array[startIndex + 2] = (byte)(value >> 40);
+            array[startIndex + 3] = (byte)(value >> 32);
+            array[startIndex + 4] = (byte)(value >> 24);
+            array[startIndex + 5] = (byte)(value >> 16);
+            array[startIndex + 6] = (byte)(value >> 08);
+            array[startIndex + 7] = (byte)(value >> 00);
+        }
+
+        public static void SetBytesBE(ushort value, byte[] array, int startIndex)
+        {
+            SetBytesBE((short)value, array, startIndex);
+        }
+
+        public static void SetBytesBE(uint value, byte[] array, int startIndex)
+        {
+            SetBytesBE((int)value, array, startIndex);
+        }
+
+        public static void SetBytesBE(ulong value, byte[] array, int startIndex)
+        {
+            SetBytesBE((long)value, array, startIndex);
+        }
+
+        public static void SetBytesLE(short value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            array[startIndex + 0] = (byte)(value >> 0);
+            array[startIndex + 1] = (byte)(value >> 8);
+        }
+
+        public static void SetBytesLE(int value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            array[startIndex + 0] = (byte)(value >> 00);
+            array[startIndex + 1] = (byte)(value >> 08);
+            array[startIndex + 2] = (byte)(value >> 16);
+            array[startIndex + 3] = (byte)(value >> 24);
+        }
+
+        public static void SetBytesLE(long value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            array[startIndex + 0] = (byte)(value >> 0);
+            array[startIndex + 1] = (byte)(value >> 8);
+            array[startIndex + 2] = (byte)(value >> 16);
+            array[startIndex + 3] = (byte)(value >> 24);
+            array[startIndex + 4] = (byte)(value >> 32);
+            array[startIndex + 5] = (byte)(value >> 40);
+            array[startIndex + 6] = (byte)(value >> 48);
+            array[startIndex + 7] = (byte)(value >> 56);
+        }
+
+        public static void SetBytesLE(ushort value, byte[] array, int startIndex)
+        {
+            SetBytesLE((short)value, array, startIndex);
+        }
+
+        public static void SetBytesLE(uint value, byte[] array, int startIndex)
+        {
+            SetBytesLE((int)value, array, startIndex);
+        }
+
+        public static void SetBytesLE(ulong value, byte[] array, int startIndex)
+        {
+            SetBytesLE((long)value, array, startIndex);
+        }
+
+        #endregion Set Bytes
+
+        #region To Number
+
         internal static short ToInt16BE(byte[] value, int startIndex)
         {
             if (value == null)
@@ -188,17 +358,18 @@ namespace Hashlib.NET.Common
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
-            return (long)
-                (
-                (value[startIndex + 0] << 56) |
-                (value[startIndex + 1] << 48) |
-                (value[startIndex + 2] << 40) |
-                (value[startIndex + 3] << 32) |
+            int one =
+                (value[startIndex + 0] << 24) |
+                (value[startIndex + 1] << 16) |
+                (value[startIndex + 2] << 08) |
+                (value[startIndex + 3] << 00);
+            int two =
                 (value[startIndex + 4] << 24) |
                 (value[startIndex + 5] << 16) |
                 (value[startIndex + 6] << 08) |
-                (value[startIndex + 7] << 00)
-                );
+                (value[startIndex + 7] << 00);
+
+            return (uint)two | ((long)one << 32);
         }
 
         internal static ushort ToUInt16BE(byte[] value, int startIndex)
@@ -277,17 +448,18 @@ namespace Hashlib.NET.Common
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
-            return (long)
-                (
-                (value[startIndex + 0] << 00) |
-                (value[startIndex + 1] << 08) |
-                (value[startIndex + 2] << 16) |
-                (value[startIndex + 4] << 32) |
-                (value[startIndex + 5] << 40) |
-                (value[startIndex + 3] << 24) |
-                (value[startIndex + 6] << 48) |
-                (value[startIndex + 7] << 56)
-                );
+            int one = 
+                (value[startIndex + 0] << 00) | 
+                (value[startIndex + 1] << 08) | 
+                (value[startIndex + 2] << 16) | 
+                (value[startIndex + 3] << 24);
+            int two = 
+                (value[startIndex + 4] << 00) | 
+                (value[startIndex + 5] << 08) |
+                (value[startIndex + 6] << 16) | 
+                (value[startIndex + 7] << 24);
+
+            return (uint)one | ((long)two << 32);
         }
 
         internal static ushort ToUInt16LE(byte[] value, int startIndex)
@@ -304,6 +476,8 @@ namespace Hashlib.NET.Common
         {
             return (ulong)ToInt64LE(value, startIndex);
         }
+
+        #endregion To Number
 
 #else
 
@@ -429,6 +603,184 @@ namespace Hashlib.NET.Common
         public static unsafe byte[] GetBytesLE(ulong value)
         {
             return GetBytesLE((long)value);
+        }
+
+        public static unsafe void SetBytesBE(short value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &array[startIndex])
+            {
+                *(pbyte + 0) = (byte)(value >> 8);
+                *(pbyte + 1) = (byte)(value >> 0);
+            }
+        }
+
+        public static unsafe void SetBytesBE(int value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &array[startIndex])
+            {
+                *(pbyte + 0) = (byte)(value >> 24);
+                *(pbyte + 1) = (byte)(value >> 16);
+                *(pbyte + 2) = (byte)(value >> 08);
+                *(pbyte + 3) = (byte)(value >> 00);
+            }
+        }
+
+        public static unsafe void SetBytesBE(long value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &array[startIndex])
+            {
+                *(pbyte + 0) = (byte)(value >> 56);
+                *(pbyte + 1) = (byte)(value >> 48);
+                *(pbyte + 2) = (byte)(value >> 40);
+                *(pbyte + 3) = (byte)(value >> 32);
+                *(pbyte + 4) = (byte)(value >> 24);
+                *(pbyte + 5) = (byte)(value >> 16);
+                *(pbyte + 6) = (byte)(value >> 08);
+                *(pbyte + 7) = (byte)(value >> 00);
+            }
+        }
+
+        public static unsafe void SetBytesBE(ushort value, byte[] array, int startIndex)
+        {
+            SetBytesBE((short)value, array, startIndex);
+        }
+
+        public static unsafe void SetBytesBE(uint value, byte[] array, int startIndex)
+        {
+            SetBytesBE((int)value, array, startIndex);
+        }
+
+        public static unsafe void SetBytesBE(ulong value, byte[] array, int startIndex)
+        {
+            SetBytesBE((long)value, array, startIndex);
+        }
+
+        public static unsafe void SetBytesLE(short value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(short))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &array[startIndex])
+            {
+                *(pbyte + 0) = (byte)(value >> 0);
+                *(pbyte + 1) = (byte)(value >> 8);
+            }
+        }
+
+        public static unsafe void SetBytesLE(int value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(int))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &array[startIndex])
+            {
+                *(pbyte + 0) = (byte)(value >> 0);
+                *(pbyte + 1) = (byte)(value >> 8);
+                *(pbyte + 2) = (byte)(value >> 16);
+                *(pbyte + 3) = (byte)(value >> 24);
+            }
+        }
+
+        public static unsafe void SetBytesLE(long value, byte[] array, int startIndex)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if ((uint)startIndex >= array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            if (startIndex > array.Length - sizeof(long))
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            fixed (byte* pbyte = &array[startIndex])
+            {
+                *(pbyte + 0) = (byte)(value >> 0);
+                *(pbyte + 1) = (byte)(value >> 8);
+                *(pbyte + 2) = (byte)(value >> 16);
+                *(pbyte + 3) = (byte)(value >> 24);
+                *(pbyte + 4) = (byte)(value >> 32);
+                *(pbyte + 5) = (byte)(value >> 40);
+                *(pbyte + 6) = (byte)(value >> 48);
+                *(pbyte + 7) = (byte)(value >> 56);
+            }
+        }
+
+        public static unsafe void SetBytesLE(ushort value, byte[] array, int startIndex)
+        {
+            SetBytesLE((short)value, array, startIndex);
+        }
+
+        public static unsafe void SetBytesLE(uint value, byte[] array, int startIndex)
+        {
+            SetBytesLE((int)value, array, startIndex);
+        }
+
+        public static unsafe void SetBytesLE(ulong value, byte[] array, int startIndex)
+        {
+            SetBytesLE((long)value, array, startIndex);
         }
 
         public static unsafe short ToInt16BE(byte[] value, int startIndex)
