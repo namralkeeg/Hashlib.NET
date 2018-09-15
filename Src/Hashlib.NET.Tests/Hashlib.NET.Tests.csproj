@@ -66,6 +66,7 @@
     <Compile Include="Crc\Crc64Tests.cs" />
     <Compile Include="Cryptographic\KeccakTests.cs" />
     <Compile Include="Cryptographic\MD5Tests.cs" />
+    <Compile Include="Cryptographic\RIPEMD160Tests.cs" />
     <Compile Include="Cryptographic\SHA1Tests.cs" />
     <Compile Include="Cryptographic\SHA224Tests.cs" />
     <Compile Include="Cryptographic\SHA256Tests.cs" />
