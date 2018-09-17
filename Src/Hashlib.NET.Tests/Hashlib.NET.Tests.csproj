@@ -83,6 +83,7 @@
     <Compile Include="NonCryptographic\Fnv1Tests.cs" />
     <Compile Include="NonCryptographic\JoaatTests.cs" />
     <Compile Include="NonCryptographic\JsTests.cs" />
+    <Compile Include="NonCryptographic\Lookup3Tests.cs" />
     <Compile Include="NonCryptographic\Pjw32Tests.cs" />
     <Compile Include="NonCryptographic\RsTests.cs" />
     <Compile Include="NonCryptographic\SaxTests.cs" />

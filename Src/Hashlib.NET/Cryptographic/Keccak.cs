@@ -143,6 +143,11 @@ namespace Hashlib.NET.Cryptographic
             }
         }
 
+        /// <summary>
+        /// The number of bits in the returned hash.
+        /// </summary>
+        public override int HashSize => (int)_bitSize;
+
         #endregion Properties
 
         #region Methods
