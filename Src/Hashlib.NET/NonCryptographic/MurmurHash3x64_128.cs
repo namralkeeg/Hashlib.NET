@@ -25,22 +25,20 @@
 #endregion Copyright
 
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Hashlib.NET.Common;
 using static Hashlib.NET.Common.BitConverterEndian;
 
 namespace Hashlib.NET.NonCryptographic
 {
     /// <summary>
-    /// A MurmurHash3 x64 128-bit hash implementation of the <see cref="HashAlgorithm"/> class.
+    /// A MurmurHash3 x64 128-bit hash implementation of the <see cref="MurmurHash128"/> class.
     /// </summary>
     /// <remarks>
     /// MurmurHash3 was written by Austin Appleby.
     /// https://github.com/aappleby/smhasher/tree/master/src
     /// </remarks>
-    public sealed class MurmurHash3x64_128 : HashAlgorithm
+    public sealed class MurmurHash3x64_128 : MurmurHash128
     {
-        private const int _BitSize = sizeof(ulong) * 2 * 8; // 8 * 2 * 8 = 128 bits
         private const ulong _C1 = 0x87C37B91114253D5ul;
         private const ulong _C2 = 0x4CF5AD432745937Ful;
         private const ulong _DefaultSeed = 0;
@@ -62,7 +60,6 @@ namespace Hashlib.NET.NonCryptographic
         /// <param name="seed">The initial value to set for the hash.</param>
         public MurmurHash3x64_128(ulong seed)
         {
-            HashSizeValue = _BitSize;
             _seed = seed;
             Initialize();
         }
@@ -78,25 +75,6 @@ namespace Hashlib.NET.NonCryptographic
                 _seed = value;
                 Initialize();
             }
-        }
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="MurmurHash3x64_128"/> class.
-        /// </summary>
-        /// <returns>A new instance of a <see cref="MurmurHash3x64_128"/> class.</returns>
-        public static new MurmurHash3x64_128 Create()
-        {
-            return Create(typeof(MurmurHash3x64_128).Name);
-        }
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="MurmurHash3x64_128"/> class.
-        /// </summary>
-        /// <param name="hashName">The name of the class to create.</param>
-        /// <returns>A new instance of a <see cref="MurmurHash3x64_128"/> class.</returns>
-        public static new MurmurHash3x64_128 Create(string hashName)
-        {
-            return (MurmurHash3x64_128)HashAlgorithmFactory.Create(hashName);
         }
 
         /// <summary>
@@ -179,7 +157,8 @@ namespace Hashlib.NET.NonCryptographic
                     case 12: k2 ^= ((ulong)array[blockEnd + 11]) << 24; goto case 11;
                     case 11: k2 ^= ((ulong)array[blockEnd + 10]) << 16; goto case 10;
                     case 10: k2 ^= ((ulong)array[blockEnd + 09]) << 08; goto case 09;
-                    case 09: k2 ^= ((ulong)array[blockEnd + 08]) << 00;
+                    case 09:
+                        k2 ^= ((ulong)array[blockEnd + 08]) << 00;
                         _hash2 ^= (k2 * _C2).Rol(33) * _C1;
                         goto case 08;
 
@@ -190,7 +169,8 @@ namespace Hashlib.NET.NonCryptographic
                     case 04: k1 ^= ((ulong)array[blockEnd + 03]) << 24; goto case 03;
                     case 03: k1 ^= ((ulong)array[blockEnd + 02]) << 16; goto case 02;
                     case 02: k1 ^= ((ulong)array[blockEnd + 01]) << 08; goto case 01;
-                    case 01: k1 ^= ((ulong)array[blockEnd + 00]) << 00;
+                    case 01:
+                        k1 ^= ((ulong)array[blockEnd + 00]) << 00;
                         _hash1 ^= (k1 * _C1).Rol(31) * _C2;
                         break;
 

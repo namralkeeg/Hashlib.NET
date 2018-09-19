@@ -26,24 +26,22 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Hashlib.NET.Common;
 using static Hashlib.NET.Common.BitConverterEndian;
 
 namespace Hashlib.NET.NonCryptographic
 {
     /// <summary>
-    /// A MurmurHash3 x86 32-bit hash implementation of the <see cref="HashAlgorithm"/> class.
+    /// A MurmurHash3 x86 32-bit hash implementation of the <see cref="MurmurHash32"/> class.
     /// </summary>
     /// <remarks>
     /// MurmurHash3 was written by Austin Appleby.
     /// https://github.com/aappleby/smhasher/tree/master/src
     /// </remarks>
-    public sealed class MurmurHash3x86_32 : HashAlgorithm
+    public sealed class MurmurHash3x86_32 : MurmurHash32
     {
         #region Fields
 
-        private const int _BitSize = sizeof(uint) * 8;
         private const uint _C1 = 0xCC9E2D51u;
         private const uint _C2 = 0X1B873593u;
         private const uint _DefaultSeed = 0;
@@ -67,7 +65,6 @@ namespace Hashlib.NET.NonCryptographic
         /// <param name="seed">The initial value to set for the hash.</param>
         public MurmurHash3x86_32(uint seed)
         {
-            HashSizeValue = _BitSize;
             _seed = seed;
             Initialize();
         }
@@ -92,25 +89,6 @@ namespace Hashlib.NET.NonCryptographic
         #endregion Properties
 
         #region Methods
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="MurmurHash3x86_32"/> class.
-        /// </summary>
-        /// <returns>A new instance of a <see cref="MurmurHash3x86_32"/> class.</returns>
-        public static new MurmurHash3x86_32 Create()
-        {
-            return Create(typeof(MurmurHash3x86_32).Name);
-        }
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="MurmurHash3x86_32"/> class.
-        /// </summary>
-        /// <param name="hashName">The name of the class to create.</param>
-        /// <returns>A new instance of a <see cref="MurmurHash3x86_32"/> class.</returns>
-        public static new MurmurHash3x86_32 Create(string hashName)
-        {
-            return (MurmurHash3x86_32)HashAlgorithmFactory.Create(hashName);
-        }
 
         /// <summary>
         /// Sets the initial values of a <see cref="MurmurHash3x86_32"/> class.

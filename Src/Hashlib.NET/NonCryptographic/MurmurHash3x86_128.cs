@@ -32,17 +32,16 @@ using static Hashlib.NET.Common.BitConverterEndian;
 namespace Hashlib.NET.NonCryptographic
 {
     /// <summary>
-    /// A MurmurHash3 x86 128-bit hash implementation of the <see cref="HashAlgorithm"/> class.
+    /// A MurmurHash3 x86 128-bit hash implementation of the <see cref="MurmurHash128"/> class.
     /// </summary>
     /// <remarks>
     /// MurmurHash3 was written by Austin Appleby.
     /// https://github.com/aappleby/smhasher/tree/master/src
     /// </remarks>
-    public sealed class MurmurHash3x86_128 : HashAlgorithm
+    public sealed class MurmurHash3x86_128 : MurmurHash128
     {
         #region Fields
 
-        private const int _BitSize = sizeof(uint) * 4 * 8; // 4 * 4 * 8 = 128 bits
         private const uint _C1 = 0x239B961Bu;
         private const uint _C2 = 0xAB0E9789u;
         private const uint _C3 = 0x38B34AE5u;
@@ -72,7 +71,6 @@ namespace Hashlib.NET.NonCryptographic
         /// <param name="seed">The initial value to set for the hash.</param>
         public MurmurHash3x86_128(uint seed)
         {
-            HashSizeValue = _BitSize;
             _seed = seed;
             Initialize();
         }
@@ -97,25 +95,6 @@ namespace Hashlib.NET.NonCryptographic
         #endregion Properties
 
         #region Methods
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="MurmurHash3x86_128"/> class.
-        /// </summary>
-        /// <returns>A new instance of a <see cref="MurmurHash3x86_128"/> class.</returns>
-        public static new MurmurHash3x86_128 Create()
-        {
-            return Create(typeof(MurmurHash3x86_128).Name);
-        }
-
-        /// <summary>
-        /// Creates a new instance of a <see cref="MurmurHash3x86_128"/> class.
-        /// </summary>
-        /// <param name="hashName">The name of the class to create.</param>
-        /// <returns>A new instance of a <see cref="MurmurHash3x86_128"/> class.</returns>
-        public static new MurmurHash3x86_128 Create(string hashName)
-        {
-            return (MurmurHash3x86_128)HashAlgorithmFactory.Create(hashName);
-        }
 
         /// <summary>
         /// Sets the initial values of a <see cref="MurmurHash3x86_128"/> class.
