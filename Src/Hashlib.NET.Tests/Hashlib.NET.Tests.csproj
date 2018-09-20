@@ -79,6 +79,7 @@
     <Compile Include="NonCryptographic\DekTests.cs" />
     <Compile Include="NonCryptographic\Djb2Tests.cs" />
     <Compile Include="NonCryptographic\Elf32Tests.cs" />
+    <Compile Include="NonCryptographic\Fast-HashTests.cs" />
     <Compile Include="NonCryptographic\Fnv1aTests.cs" />
     <Compile Include="NonCryptographic\Fnv1Tests.cs" />
     <Compile Include="NonCryptographic\JoaatTests.cs" />
