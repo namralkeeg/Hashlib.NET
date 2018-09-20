@@ -25,7 +25,6 @@
 #endregion Copyright
 
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Hashlib.NET.Common;
 using static Hashlib.NET.Common.BitConverterEndian;
 
@@ -169,28 +168,32 @@ namespace Hashlib.NET.NonCryptographic
                 {
                     case 15: k4 ^= (uint)array[blockEnd + 14] << 16; goto case 14;
                     case 14: k4 ^= (uint)array[blockEnd + 13] << 08; goto case 13;
-                    case 13: k4 ^= (uint)array[blockEnd + 12] << 00;
+                    case 13:
+                        k4 ^= (uint)array[blockEnd + 12] << 00;
                         _hash4 ^= (k4 * _C4).Rol(18) * _C1;
                         goto case 12;
 
                     case 12: k3 ^= (uint)array[blockEnd + 11] << 24; goto case 11;
                     case 11: k3 ^= (uint)array[blockEnd + 10] << 16; goto case 10;
                     case 10: k3 ^= (uint)array[blockEnd + 09] << 08; goto case 09;
-                    case 09: k3 ^= (uint)array[blockEnd + 08] << 00;
+                    case 09:
+                        k3 ^= (uint)array[blockEnd + 08] << 00;
                         _hash3 ^= (k3 * _C3).Rol(17) * _C4;
                         goto case 08;
 
                     case 8: k2 ^= (uint)array[blockEnd + 7] << 24; goto case 07;
                     case 7: k2 ^= (uint)array[blockEnd + 6] << 16; goto case 06;
                     case 6: k2 ^= (uint)array[blockEnd + 5] << 08; goto case 05;
-                    case 5: k2 ^= (uint)array[blockEnd + 4] << 00;
+                    case 5:
+                        k2 ^= (uint)array[blockEnd + 4] << 00;
                         _hash2 ^= (k2 * _C2).Rol(16) * _C3;
                         goto case 04;
 
                     case 4: k1 ^= (uint)array[blockEnd + 3] << 24; goto case 03;
                     case 3: k1 ^= (uint)array[blockEnd + 2] << 16; goto case 02;
                     case 2: k1 ^= (uint)array[blockEnd + 1] << 08; goto case 01;
-                    case 1: k1 ^= (uint)array[blockEnd + 0] << 00;
+                    case 1:
+                        k1 ^= (uint)array[blockEnd + 0] << 00;
                         _hash1 ^= (k1 * _C1).Rol(15) * _C2;
                         break;
 
