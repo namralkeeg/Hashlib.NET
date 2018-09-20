@@ -46,14 +46,12 @@ namespace Hashlib.NET.NonCryptographic
         private const uint _C2 = 0xAB0E9789u;
         private const uint _C3 = 0x38B34AE5u;
         private const uint _C4 = 0xA1E38B93u;
-        private const uint _DefaultSeed = 0;
 
         private uint _byteCount;
         private uint _hash1;
         private uint _hash2;
         private uint _hash3;
         private uint _hash4;
-        private uint _seed;
 
         #endregion Fields
 
@@ -76,23 +74,6 @@ namespace Hashlib.NET.NonCryptographic
         }
 
         #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Gets and sets the seed value to use for computing the hash.
-        /// </summary>
-        public uint Seed
-        {
-            get => _seed;
-            set
-            {
-                _seed = value;
-                Initialize();
-            }
-        }
-
-        #endregion Properties
 
         #region Methods
 

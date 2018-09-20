@@ -40,9 +40,25 @@ namespace Hashlib.NET.NonCryptographic
     public abstract class MurmurHash128 : HashAlgorithm
     {
         protected const int _BitSize = 128;
+        protected const uint _DefaultSeed = 0;
+
+        protected uint _seed;
 
         /// <inheritdoc/>
         public override int HashSize => _BitSize;
+
+        /// <summary>
+        /// Gets and sets the seed value to use for computing the hash.
+        /// </summary>
+        public uint Seed
+        {
+            get => _seed;
+            set
+            {
+                _seed = value;
+                Initialize();
+            }
+        }
 
         /// <summary>
         /// Creates a new instance of a <see cref="MurmurHash128"/> class.

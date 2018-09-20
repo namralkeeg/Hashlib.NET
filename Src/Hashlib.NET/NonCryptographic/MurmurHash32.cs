@@ -38,10 +38,32 @@ namespace Hashlib.NET.NonCryptographic
     /// </remarks>
     public abstract class MurmurHash32 : HashAlgorithm
     {
+        #region Fields
+
         protected const int _BitSize = sizeof(uint) * 8;
+        protected uint _seed;
+
+        #endregion Fields
+
+        #region Properties
 
         /// <inheritdoc/>
         public override int HashSize => _BitSize;
+
+        /// <summary>
+        /// Gets and sets the seed value to use for computing the hash.
+        /// </summary>
+        public uint Seed
+        {
+            get => _seed;
+            set
+            {
+                _seed = value;
+                Initialize();
+            }
+        }
+
+        #endregion Properties
 
         #region Methods
 

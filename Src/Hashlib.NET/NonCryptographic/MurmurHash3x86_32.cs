@@ -47,7 +47,6 @@ namespace Hashlib.NET.NonCryptographic
         private const uint _DefaultSeed = 0;
         private uint _byteCount;
         private uint _hash;
-        private uint _seed;
 
         #endregion Fields
 
@@ -70,23 +69,6 @@ namespace Hashlib.NET.NonCryptographic
         }
 
         #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Gets and sets the seed value to use for computing the hash.
-        /// </summary>
-        public uint Seed
-        {
-            get => _seed;
-            set
-            {
-                _seed = value;
-                Initialize();
-            }
-        }
-
-        #endregion Properties
 
         #region Methods
 

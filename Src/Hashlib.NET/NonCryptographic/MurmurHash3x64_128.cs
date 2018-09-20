@@ -41,12 +41,10 @@ namespace Hashlib.NET.NonCryptographic
     {
         private const ulong _C1 = 0x87C37B91114253D5ul;
         private const ulong _C2 = 0x4CF5AD432745937Ful;
-        private const ulong _DefaultSeed = 0;
 
         private ulong _byteCount;
         private ulong _hash1;
         private ulong _hash2;
-        private ulong _seed;
 
         /// <summary>
         /// Initializes a <see cref="MurmurHash3x64_128"/> class.
@@ -58,23 +56,10 @@ namespace Hashlib.NET.NonCryptographic
         /// Sets the initial values of a <see cref="MurmurHash3x64_128"/> class.
         /// </summary>
         /// <param name="seed">The initial value to set for the hash.</param>
-        public MurmurHash3x64_128(ulong seed)
+        public MurmurHash3x64_128(uint seed)
         {
             _seed = seed;
             Initialize();
-        }
-
-        /// <summary>
-        /// Gets and sets the seed value to use for computing the hash.
-        /// </summary>
-        public ulong Seed
-        {
-            get => _seed;
-            set
-            {
-                _seed = value;
-                Initialize();
-            }
         }
 
         /// <summary>
