@@ -63,20 +63,34 @@ namespace Hashlib.NET.NonCryptographic
         /// <summary>
         /// Initializes a <see cref="Lookup3"/> class.
         /// </summary>
-        public Lookup3() : this(_DefaultBitSize)
-        {
-        }
+        public Lookup3() : this(_DefaultBitSize, _DefaultSeed)
+        { }
 
         /// <summary>
         /// Sets the initial values of a <see cref="Lookup3"/> class.
         /// </summary>
         /// <param name="bitSize">The bit size to use for hashing algorithm.</param>
         /// <remarks>Bit size is restricted to 32, and 64.</remarks>
-        public Lookup3(BitSize bitSize)
+        public Lookup3(BitSize bitSize) : this(bitSize, _DefaultSeed)
+        { }
+
+        /// <summary>
+        /// Initializes a <see cref="Lookup3"/> class.
+        /// </summary>
+        /// <param name="seed">The initial value to set for the hash.</param>
+        public Lookup3(ulong seed) : this(_DefaultBitSize, seed)
+        { }
+
+        /// <summary>
+        /// Initializes a <see cref="Lookup3"/> class.
+        /// </summary>
+        /// <param name="bitSize">The bit size to use for hashing algorithm.</param>
+        /// <param name="seed">The initial value to set for the hash.</param>
+        /// <remarks>Bit size is restricted to 32, and 64.</remarks>
+        public Lookup3(BitSize bitSize, ulong seed)
         {
             BitSize = bitSize;
-            _seedA = _DefaultSeed;
-            _seedB = _DefaultSeed;
+            Seed = seed;
             Initialize();
         }
 
@@ -88,7 +102,7 @@ namespace Hashlib.NET.NonCryptographic
         /// Gets and sets the bit size to use for the hashing algorithm. Defaults to 32.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown for invalid bit sizes.</exception>
-        /// <remarks>Valid bit sizes are 224, 256, 384, and 512.</remarks>
+        /// <remarks>Valid bit sizes are 32 and 64.</remarks>
         public BitSize BitSize
         {
             get => _bitSize;
@@ -101,7 +115,6 @@ namespace Hashlib.NET.NonCryptographic
                 }
 
                 _bitSize = value;
-                Initialize();
             }
         }
 
@@ -112,52 +125,24 @@ namespace Hashlib.NET.NonCryptographic
         /// Gets and sets the seed value to use for computing the hash.
         /// </summary>
         /// <value>A <see cref="uint"/> represented as an array of bytes.</value>
-        public byte[] Seed
+        public ulong Seed
         {
             get
             {
                 if (_bitSize == BitSize.Bits32)
                 {
-                    return BitConverter.GetBytes(_seedA);
+                    return _seedA;
                 }
                 else
                 {
-                    return BitConverter.GetBytes(((ulong)_seedB << 32) | _seedA);
+                    return ((ulong)_seedB << 32) | _seedA;
                 }
             }
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                switch (value.Length)
-                {
-                    case 1:
-                        _seedA = value[0];
-                        break;
-
-                    case 2:
-                        _seedA = BitConverter.ToUInt16(value, 0);
-                        break;
-
-                    case 4:
-                        _seedA = BitConverter.ToUInt32(value, 0);
-                        break;
-
-                    case 8:
-                        ulong seed = BitConverter.ToUInt64(value, 0);
-                        _seedA = (uint)(seed & uint.MaxValue);
-                        _seedB = (uint)((seed >> 32) & uint.MaxValue);
-                        break;
-
-                    default:
-                        throw new ArgumentException(string.Format(_PropArrayMustBeLessMessageTemplate,
-                            nameof(Seed), sizeof(uint)), nameof(value));
-                }
-
+                _seedA = (uint)(value & uint.MaxValue);
+                _seedB = (uint)((value >> 32) & uint.MaxValue);
                 Initialize();
             }
         }
@@ -204,6 +189,7 @@ namespace Hashlib.NET.NonCryptographic
 
             // Set up the internal state.
             a = b = c = 0xdeadbeefu + (uint)length + _hashA;
+            c += _hashB;
 
             // All but last block: aligned reads and affect 32 bits of (a,b,c)
             while (length > 12)

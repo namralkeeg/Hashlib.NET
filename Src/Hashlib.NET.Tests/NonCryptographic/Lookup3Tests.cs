@@ -44,7 +44,7 @@ namespace Hashlib.NET.Tests.NonCryptographic
             [InlineData(0xCD628161u, "Four score and seven years ago", 1u)]
             public void ComputeHash_WithMultipleBytes(uint expected, string testString, uint seed)
             {
-                _hashAlgorithm.Seed = BitConverter.GetBytes(seed);
+                _hashAlgorithm.Seed = seed;
                 var bytes = Encoding.UTF8.GetBytes(testString);
                 var result = _hashAlgorithm.ComputeHash(bytes, 0, bytes.Length);
                 var hash = BitConverter.ToUInt32(result, 0);
