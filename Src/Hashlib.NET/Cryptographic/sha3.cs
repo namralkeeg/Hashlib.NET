@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Hashlib.NET.Common;
 using static Hashlib.NET.Common.BitConverterEndian;
@@ -39,7 +40,7 @@ namespace Hashlib.NET.Cryptographic
     /// SHA3 is based on a novel approach called sponge construction.
     /// https://en.wikipedia.org/wiki/SHA-3
     /// </remarks>
-    public sealed class SHA3 : HashAlgorithm
+    public sealed class SHA3 : HashAlgorithm, IBlockHash
     {
         #region Fields
 
@@ -147,6 +148,11 @@ namespace Hashlib.NET.Cryptographic
         /// The number of bits in the returned hash.
         /// </summary>
         public override int HashSize => (int)_bitSize;
+
+        /// <summary>
+        /// The size in bytes of each block that's processed at once.
+        /// </summary>
+        public int BlockSize => _blockSize;
 
         #endregion Properties
 
@@ -257,6 +263,7 @@ namespace Hashlib.NET.Cryptographic
             return hashTemp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static uint Mod5(uint x)
         {
             // return x % 5 for 0 <= x <= 9
@@ -278,6 +285,7 @@ namespace Hashlib.NET.Cryptographic
         /// </summary>
         /// <param name="block">The array of data to process.</param>
         /// <param name="startIndex">The index into the array to start at.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBlock(byte[] block, int startIndex)
         {
             // Mix data into state
@@ -365,6 +373,7 @@ namespace Hashlib.NET.Cryptographic
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBuffer()
         {
             // Add padding

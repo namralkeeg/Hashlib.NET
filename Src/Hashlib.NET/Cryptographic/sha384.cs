@@ -39,12 +39,12 @@ namespace Hashlib.NET.Cryptographic
     /// The initial hash values h0 through h7 are different(taken from the 9th through 16th primes), and
     /// the output is constructed by omitting h6 and h7.
     /// </remarks>
-    public class SHA384 : SHA512
+    public sealed class SHA384 : SHA512
     {
         #region Constructors
 
         /// <summary>
-        /// Sets the initial static values of a <see cref="SHA384"/> class.
+        /// Sets the initial values of a <see cref="SHA384"/> class.
         /// </summary>
         public SHA384()
         { }

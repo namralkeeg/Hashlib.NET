@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region Copyright
+
+/*
+ * Copyright (C) 2018 Larry Lopez
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+#endregion Copyright
+
+using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Hashlib.NET.Common;
 using static Hashlib.NET.Common.BitConverterEndian;
@@ -9,7 +36,7 @@ namespace Hashlib.NET.Cryptographic
     /// A SHA-2 512-bit hash implementation of the <see cref="HashAlgorithm"/> class.
     /// </summary>
     /// <remarks> https://en.wikipedia.org/wiki/SHA-2 </remarks>
-    public class SHA512 : HashAlgorithm
+    public class SHA512 : HashAlgorithm, IBlockHash
     {
         #region Fields
 
@@ -36,7 +63,7 @@ namespace Hashlib.NET.Cryptographic
         #region Constructors
 
         /// <summary>
-        /// Sets the initial static values of a <see cref="SHA512"/> class.
+        /// Sets the initial values of a <see cref="SHA512"/> class.
         /// </summary>
         public SHA512()
         {
@@ -52,6 +79,11 @@ namespace Hashlib.NET.Cryptographic
 
         /// <inheritdoc/>
         public override int HashSize => 512;
+
+        /// <summary>
+        /// The size in bytes of each block that's processed at once.
+        /// </summary>
+        public int BlockSize => _BlockSize;
 
         #endregion Properties
 
@@ -97,6 +129,7 @@ namespace Hashlib.NET.Cryptographic
             _shaState[7] = 0x5be0cd19137e2179;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static ulong F1(ulong e, ulong f, ulong g)
         {
             // S1 = (e rightrotate 14) xor (e rightrotate 18) xor (e rightrotate 41)
@@ -105,6 +138,7 @@ namespace Hashlib.NET.Cryptographic
             return unchecked((e.Ror(14) ^ e.Ror(18) ^ e.Ror(41)) + ((e & f) ^ ((~e) & g)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static ulong F2(ulong a, ulong b, ulong c)
         {
             // S0 = (a rightrotate 28) xor (a rightrotate 34) xor (a rightrotate 39)
@@ -185,6 +219,7 @@ namespace Hashlib.NET.Cryptographic
         /// </summary>
         /// <param name="block">The array of data to process.</param>
         /// <param name="startIndex">The index into the array to start at.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ProcessBlock(byte[] block, int startIndex)
         {
             // get last hash
@@ -334,6 +369,7 @@ namespace Hashlib.NET.Cryptographic
             _shaState[7] += h;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void ProcessBuffer()
         {
             // The input bytes are considered as bits strings, where the first bit is the most

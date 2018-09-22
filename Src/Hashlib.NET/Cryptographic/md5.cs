@@ -39,14 +39,14 @@ namespace Hashlib.NET.Cryptographic
     /// The MD5 message-digest algorithm is a widely used hash function producing a 128-bit hash value.
     /// https://en.wikipedia.org/wiki/MD5
     /// </remarks>
-    public sealed class MD5 : HashAlgorithm
+    public sealed class MD5 : HashAlgorithm, IBlockHash
     {
         #region Fields
 
         private const int _BitSize = 128;
 
         /// split into 64 byte blocks (=> 512 bits)
-        private const uint _BlockSize = 64;       // 512 / 8
+        private const int _BlockSize = 64;       // 512 / 8
         private const uint _HashBytes = 16;
         private const uint _HashValuesCount = 4;  // 16 / 4
 
@@ -71,6 +71,12 @@ namespace Hashlib.NET.Cryptographic
         }
 
         #endregion Constructors
+
+        #region Properties
+
+        public int BlockSize => _BlockSize;
+
+        #endregion Properties
 
         #region Methods
 
@@ -139,9 +145,9 @@ namespace Hashlib.NET.Cryptographic
                 while (numBytes >= _BlockSize)
                 {
                     ProcessBlock(array, current);
-                    current += (int)_BlockSize;
+                    current += _BlockSize;
                     _byteCount += _BlockSize;
-                    numBytes -= (int)_BlockSize;
+                    numBytes -= _BlockSize;
                 }
 
                 // keep remaining bytes in buffer
