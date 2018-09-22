@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region Copyright
+
+/*
+ * Copyright (C) 2018 Larry Lopez
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+#endregion Copyright
+
+using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Hashlib.NET.Common;
@@ -10,13 +37,15 @@ namespace Hashlib.NET.Cryptographic
     /// A RIPEMD 128-bit hash implementation of the <see cref="HashAlgorithm"/> class.
     /// </summary>
     /// <remarks> https://en.wikipedia.org/wiki/RIPEMD </remarks>
-    public class RIPEMD128 : HashAlgorithm
+    public class RIPEMD128 : HashAlgorithm, IBlockHash
     {
+        #region Fields
+
         // Hash is 160 bits long.
         private const int _BitSize = 128;
 
         // Split into 64 byte blocks (=> 512 bits)
-        private const uint _BlockSize = 64; // 512 / 8
+        private const int _BlockSize = 64; // 512 / 8
 
         // Hash is 20 bytes long.
         private const uint _HashBytes = 16;
@@ -28,6 +57,10 @@ namespace Hashlib.NET.Cryptographic
         private readonly uint[] _words;
         private uint _bufferSize;
         private uint _byteCount;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a <see cref="RIPEMD128"/> class.
@@ -41,10 +74,23 @@ namespace Hashlib.NET.Cryptographic
             Initialize();
         }
 
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the size in bytes of each block that's processed at once.
+        /// </summary>
+        public int BlockSize => _BlockSize;
+
         /// <summary>
         /// Gets and sets if the core hash algorithm should execute in parallel.
         /// </summary>
         public bool InParallel { get; set; }
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Creates a new instance of a <see cref="RIPEMD128"/> class.
@@ -63,6 +109,39 @@ namespace Hashlib.NET.Cryptographic
         public static new RIPEMD128 Create(string hashName)
         {
             return (RIPEMD128)HashAlgorithmFactory.Create(hashName);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FFF(ref uint a, uint b, uint c, uint d, uint x, int s)
+        {
+            unchecked
+            {
+                // F(x ^ y ^ z)
+                a += (b ^ c ^ d) + x;
+                a = (a << s) | (a >> (32 - s));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void II(ref uint a, uint b, uint c, uint d, uint x, int s)
+        {
+            unchecked
+            {
+                // I((b & d) | (c & ~d))
+                a += ((b & d) | (c & ~d)) + x + 0x8f1bbcdcu;
+                a = (a << s) | (a >> (32 - s));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void III(ref uint a, uint b, uint c, uint d, uint x, int s)
+        {
+            unchecked
+            {
+                // I((b & d) | (c & ~d))
+                a += ((b & d) | (c & ~d)) + x + 0x50a28be6u;
+                a = (a << s) | (a >> (32 - s));
+            }
         }
 
         /// <summary>
@@ -112,9 +191,9 @@ namespace Hashlib.NET.Cryptographic
                 while (numBytes >= _BlockSize)
                 {
                     ProcessBlock(array, current);
-                    current += (int)_BlockSize;
+                    current += _BlockSize;
                     _byteCount += _BlockSize;
-                    numBytes -= (int)_BlockSize;
+                    numBytes -= _BlockSize;
                 }
 
                 // Keep the remaining bytes in buffer.
@@ -148,7 +227,8 @@ namespace Hashlib.NET.Cryptographic
 
             return hash;
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void FF(ref uint a, uint b, uint c, uint d, uint x, int s)
         {
             unchecked
@@ -159,6 +239,7 @@ namespace Hashlib.NET.Cryptographic
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void GG(ref uint a, uint b, uint c, uint d, uint x, int s)
         {
             unchecked
@@ -169,36 +250,7 @@ namespace Hashlib.NET.Cryptographic
             }
         }
 
-        private static void HH(ref uint a, uint b, uint c, uint d, uint x, int s)
-        {
-            unchecked
-            {
-                // H((b | ~c) ^ d)
-                a += ((b | ~c) ^ d) + x + 0x6ed9eba1u;
-                a = (a << s) | (a >> (32 - s));
-            }
-        }
-
-        public static void II(ref uint a, uint b, uint c, uint d, uint x, int s)
-        {
-            unchecked
-            {
-                // I((b & d) | (c & ~d))
-                a += ((b & d) | (c & ~d)) + x + 0x8f1bbcdcu;
-                a = (a << s) | (a >> (32 - s));
-            }
-        }
-
-        public static void FFF(ref uint a, uint b, uint c, uint d, uint x, int s)
-        {
-            unchecked
-            {
-                // F(x ^ y ^ z)
-                a += (b ^ c ^ d) + x;
-                a = (a << s) | (a >> (32 - s));
-            }
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void GGG(ref uint a, uint b, uint c, uint d, uint x, int s)
         {
             unchecked
@@ -209,22 +261,24 @@ namespace Hashlib.NET.Cryptographic
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void HH(ref uint a, uint b, uint c, uint d, uint x, int s)
+        {
+            unchecked
+            {
+                // H((b | ~c) ^ d)
+                a += ((b | ~c) ^ d) + x + 0x6ed9eba1u;
+                a = (a << s) | (a >> (32 - s));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void HHH(ref uint a, uint b, uint c, uint d, uint x, int s)
         {
             unchecked
             {
                 // H((b | ~c) ^ d)
                 a += ((b | ~c) ^ d) + x + 0x5c4dd124u;
-                a = (a << s) | (a >> (32 - s));
-            }
-        }
-
-        public static void III(ref uint a, uint b, uint c, uint d, uint x, int s)
-        {
-            unchecked
-            {
-                // I((b & d) | (c & ~d))
-                a += ((b & d) | (c & ~d)) + x + 0x50a28be6u;
                 a = (a << s) | (a >> (32 - s));
             }
         }
@@ -304,81 +358,7 @@ namespace Hashlib.NET.Cryptographic
             II(ref bb, cc, dd, aa, _words[02], 12);
         }
 
-        private void Right(ref uint aaa, ref uint bbb, ref uint ccc, ref uint ddd)
-        {
-            /* parallel round 1 */
-            III(ref aaa, bbb, ccc, ddd, _words[05], 08);
-            III(ref ddd, aaa, bbb, ccc, _words[14], 09);
-            III(ref ccc, ddd, aaa, bbb, _words[07], 09);
-            III(ref bbb, ccc, ddd, aaa, _words[00], 11);
-            III(ref aaa, bbb, ccc, ddd, _words[09], 13);
-            III(ref ddd, aaa, bbb, ccc, _words[02], 15);
-            III(ref ccc, ddd, aaa, bbb, _words[11], 15);
-            III(ref bbb, ccc, ddd, aaa, _words[04], 05);
-            III(ref aaa, bbb, ccc, ddd, _words[13], 07);
-            III(ref ddd, aaa, bbb, ccc, _words[06], 07);
-            III(ref ccc, ddd, aaa, bbb, _words[15], 08);
-            III(ref bbb, ccc, ddd, aaa, _words[08], 11);
-            III(ref aaa, bbb, ccc, ddd, _words[01], 14);
-            III(ref ddd, aaa, bbb, ccc, _words[10], 14);
-            III(ref ccc, ddd, aaa, bbb, _words[03], 12);
-            III(ref bbb, ccc, ddd, aaa, _words[12], 06);
-
-            /* parallel round 2 */
-            HHH(ref aaa, bbb, ccc, ddd, _words[06], 09);
-            HHH(ref ddd, aaa, bbb, ccc, _words[11], 13);
-            HHH(ref ccc, ddd, aaa, bbb, _words[03], 15);
-            HHH(ref bbb, ccc, ddd, aaa, _words[07], 07);
-            HHH(ref aaa, bbb, ccc, ddd, _words[00], 12);
-            HHH(ref ddd, aaa, bbb, ccc, _words[13], 08);
-            HHH(ref ccc, ddd, aaa, bbb, _words[05], 09);
-            HHH(ref bbb, ccc, ddd, aaa, _words[10], 11);
-            HHH(ref aaa, bbb, ccc, ddd, _words[14], 07);
-            HHH(ref ddd, aaa, bbb, ccc, _words[15], 07);
-            HHH(ref ccc, ddd, aaa, bbb, _words[08], 12);
-            HHH(ref bbb, ccc, ddd, aaa, _words[12], 07);
-            HHH(ref aaa, bbb, ccc, ddd, _words[04], 06);
-            HHH(ref ddd, aaa, bbb, ccc, _words[09], 15);
-            HHH(ref ccc, ddd, aaa, bbb, _words[01], 13);
-            HHH(ref bbb, ccc, ddd, aaa, _words[02], 11);
-
-            /* parallel round 3 */
-            GGG(ref aaa, bbb, ccc, ddd, _words[15], 09);
-            GGG(ref ddd, aaa, bbb, ccc, _words[05], 07);
-            GGG(ref ccc, ddd, aaa, bbb, _words[01], 15);
-            GGG(ref bbb, ccc, ddd, aaa, _words[03], 11);
-            GGG(ref aaa, bbb, ccc, ddd, _words[07], 08);
-            GGG(ref ddd, aaa, bbb, ccc, _words[14], 06);
-            GGG(ref ccc, ddd, aaa, bbb, _words[06], 06);
-            GGG(ref bbb, ccc, ddd, aaa, _words[09], 14);
-            GGG(ref aaa, bbb, ccc, ddd, _words[11], 12);
-            GGG(ref ddd, aaa, bbb, ccc, _words[08], 13);
-            GGG(ref ccc, ddd, aaa, bbb, _words[12], 05);
-            GGG(ref bbb, ccc, ddd, aaa, _words[02], 14);
-            GGG(ref aaa, bbb, ccc, ddd, _words[10], 13);
-            GGG(ref ddd, aaa, bbb, ccc, _words[00], 13);
-            GGG(ref ccc, ddd, aaa, bbb, _words[04], 07);
-            GGG(ref bbb, ccc, ddd, aaa, _words[13], 05);
-
-            /* parallel round 4 */
-            FFF(ref aaa, bbb, ccc, ddd, _words[08], 15);
-            FFF(ref ddd, aaa, bbb, ccc, _words[06], 05);
-            FFF(ref ccc, ddd, aaa, bbb, _words[04], 08);
-            FFF(ref bbb, ccc, ddd, aaa, _words[01], 11);
-            FFF(ref aaa, bbb, ccc, ddd, _words[03], 14);
-            FFF(ref ddd, aaa, bbb, ccc, _words[11], 14);
-            FFF(ref ccc, ddd, aaa, bbb, _words[15], 06);
-            FFF(ref bbb, ccc, ddd, aaa, _words[00], 14);
-            FFF(ref aaa, bbb, ccc, ddd, _words[05], 06);
-            FFF(ref ddd, aaa, bbb, ccc, _words[12], 09);
-            FFF(ref ccc, ddd, aaa, bbb, _words[02], 12);
-            FFF(ref bbb, ccc, ddd, aaa, _words[13], 09);
-            FFF(ref aaa, bbb, ccc, ddd, _words[09], 12);
-            FFF(ref ddd, aaa, bbb, ccc, _words[07], 05);
-            FFF(ref ccc, ddd, aaa, bbb, _words[10], 15);
-            FFF(ref bbb, ccc, ddd, aaa, _words[14], 08);
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBlock(byte[] block, int startIndex)
         {
             uint aa = _ripemdState[0];
@@ -420,6 +400,7 @@ namespace Hashlib.NET.Cryptographic
             _ripemdState[0] = ddd;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBuffer()
         {
             // The input bytes are considered as bits strings, where the first bit is the most
@@ -516,5 +497,82 @@ namespace Hashlib.NET.Cryptographic
                 ProcessBlock(extra, 0);
             }
         }
+
+        private void Right(ref uint aaa, ref uint bbb, ref uint ccc, ref uint ddd)
+        {
+            /* parallel round 1 */
+            III(ref aaa, bbb, ccc, ddd, _words[05], 08);
+            III(ref ddd, aaa, bbb, ccc, _words[14], 09);
+            III(ref ccc, ddd, aaa, bbb, _words[07], 09);
+            III(ref bbb, ccc, ddd, aaa, _words[00], 11);
+            III(ref aaa, bbb, ccc, ddd, _words[09], 13);
+            III(ref ddd, aaa, bbb, ccc, _words[02], 15);
+            III(ref ccc, ddd, aaa, bbb, _words[11], 15);
+            III(ref bbb, ccc, ddd, aaa, _words[04], 05);
+            III(ref aaa, bbb, ccc, ddd, _words[13], 07);
+            III(ref ddd, aaa, bbb, ccc, _words[06], 07);
+            III(ref ccc, ddd, aaa, bbb, _words[15], 08);
+            III(ref bbb, ccc, ddd, aaa, _words[08], 11);
+            III(ref aaa, bbb, ccc, ddd, _words[01], 14);
+            III(ref ddd, aaa, bbb, ccc, _words[10], 14);
+            III(ref ccc, ddd, aaa, bbb, _words[03], 12);
+            III(ref bbb, ccc, ddd, aaa, _words[12], 06);
+
+            /* parallel round 2 */
+            HHH(ref aaa, bbb, ccc, ddd, _words[06], 09);
+            HHH(ref ddd, aaa, bbb, ccc, _words[11], 13);
+            HHH(ref ccc, ddd, aaa, bbb, _words[03], 15);
+            HHH(ref bbb, ccc, ddd, aaa, _words[07], 07);
+            HHH(ref aaa, bbb, ccc, ddd, _words[00], 12);
+            HHH(ref ddd, aaa, bbb, ccc, _words[13], 08);
+            HHH(ref ccc, ddd, aaa, bbb, _words[05], 09);
+            HHH(ref bbb, ccc, ddd, aaa, _words[10], 11);
+            HHH(ref aaa, bbb, ccc, ddd, _words[14], 07);
+            HHH(ref ddd, aaa, bbb, ccc, _words[15], 07);
+            HHH(ref ccc, ddd, aaa, bbb, _words[08], 12);
+            HHH(ref bbb, ccc, ddd, aaa, _words[12], 07);
+            HHH(ref aaa, bbb, ccc, ddd, _words[04], 06);
+            HHH(ref ddd, aaa, bbb, ccc, _words[09], 15);
+            HHH(ref ccc, ddd, aaa, bbb, _words[01], 13);
+            HHH(ref bbb, ccc, ddd, aaa, _words[02], 11);
+
+            /* parallel round 3 */
+            GGG(ref aaa, bbb, ccc, ddd, _words[15], 09);
+            GGG(ref ddd, aaa, bbb, ccc, _words[05], 07);
+            GGG(ref ccc, ddd, aaa, bbb, _words[01], 15);
+            GGG(ref bbb, ccc, ddd, aaa, _words[03], 11);
+            GGG(ref aaa, bbb, ccc, ddd, _words[07], 08);
+            GGG(ref ddd, aaa, bbb, ccc, _words[14], 06);
+            GGG(ref ccc, ddd, aaa, bbb, _words[06], 06);
+            GGG(ref bbb, ccc, ddd, aaa, _words[09], 14);
+            GGG(ref aaa, bbb, ccc, ddd, _words[11], 12);
+            GGG(ref ddd, aaa, bbb, ccc, _words[08], 13);
+            GGG(ref ccc, ddd, aaa, bbb, _words[12], 05);
+            GGG(ref bbb, ccc, ddd, aaa, _words[02], 14);
+            GGG(ref aaa, bbb, ccc, ddd, _words[10], 13);
+            GGG(ref ddd, aaa, bbb, ccc, _words[00], 13);
+            GGG(ref ccc, ddd, aaa, bbb, _words[04], 07);
+            GGG(ref bbb, ccc, ddd, aaa, _words[13], 05);
+
+            /* parallel round 4 */
+            FFF(ref aaa, bbb, ccc, ddd, _words[08], 15);
+            FFF(ref ddd, aaa, bbb, ccc, _words[06], 05);
+            FFF(ref ccc, ddd, aaa, bbb, _words[04], 08);
+            FFF(ref bbb, ccc, ddd, aaa, _words[01], 11);
+            FFF(ref aaa, bbb, ccc, ddd, _words[03], 14);
+            FFF(ref ddd, aaa, bbb, ccc, _words[11], 14);
+            FFF(ref ccc, ddd, aaa, bbb, _words[15], 06);
+            FFF(ref bbb, ccc, ddd, aaa, _words[00], 14);
+            FFF(ref aaa, bbb, ccc, ddd, _words[05], 06);
+            FFF(ref ddd, aaa, bbb, ccc, _words[12], 09);
+            FFF(ref ccc, ddd, aaa, bbb, _words[02], 12);
+            FFF(ref bbb, ccc, ddd, aaa, _words[13], 09);
+            FFF(ref aaa, bbb, ccc, ddd, _words[09], 12);
+            FFF(ref ddd, aaa, bbb, ccc, _words[07], 05);
+            FFF(ref ccc, ddd, aaa, bbb, _words[10], 15);
+            FFF(ref bbb, ccc, ddd, aaa, _words[14], 08);
+        }
+
+        #endregion Methods
     }
 }

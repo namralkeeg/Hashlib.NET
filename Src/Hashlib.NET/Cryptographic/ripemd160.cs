@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region Copyright
+
+/*
+ * Copyright (C) 2018 Larry Lopez
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+#endregion Copyright
+
+using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Hashlib.NET.Common;
@@ -10,7 +37,7 @@ namespace Hashlib.NET.Cryptographic
     /// A RIPEMD 160-bit hash implementation of the <see cref="HashAlgorithm"/> class.
     /// </summary>
     /// <remarks> https://en.wikipedia.org/wiki/RIPEMD </remarks>
-    public class RIPEMD160 : HashAlgorithm
+    public class RIPEMD160 : HashAlgorithm, IBlockHash
     {
         #region Fields
 
@@ -18,7 +45,7 @@ namespace Hashlib.NET.Cryptographic
         private const int _BitSize = 160;
 
         // Split into 64 byte blocks (=> 512 bits)
-        private const uint _BlockSize = 64; // 512 / 8
+        private const int _BlockSize = 64; // 512 / 8
 
         // Hash is 20 bytes long.
         private const uint _HashBytes = 20;
@@ -57,6 +84,11 @@ namespace Hashlib.NET.Cryptographic
         /// Gets and sets if the core hash algorithm should execute in parallel.
         /// </summary>
         public bool InParallel { get => _inParallel; set => _inParallel = value; }
+
+        /// <summary>
+        /// Gets the size in bytes of each block that's processed at once.
+        /// </summary>
+        public int BlockSize => _BlockSize;
 
         #endregion Properties
 
@@ -129,9 +161,9 @@ namespace Hashlib.NET.Cryptographic
                 while (numBytes >= _BlockSize)
                 {
                     ProcessBlock(array, current);
-                    current += (int)_BlockSize;
+                    current += _BlockSize;
                     _byteCount += _BlockSize;
-                    numBytes -= (int)_BlockSize;
+                    numBytes -= _BlockSize;
                 }
 
                 // Keep the remaining bytes in buffer.
@@ -166,26 +198,31 @@ namespace Hashlib.NET.Cryptographic
             return hash;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static uint F(uint x, uint y, uint z)
         {
             return (x ^ y ^ z);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static uint G(uint x, uint y, uint z)
         {
             return ((x & y) | (~x & z));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static uint H(uint x, uint y, uint z)
         {
             return ((x | ~y) ^ z);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static uint I(uint x, uint y, uint z)
         {
             return ((x & z) | (y & ~z));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static uint J(uint x, uint y, uint z)
         {
             return (x ^ (y | ~z));
@@ -599,6 +636,7 @@ namespace Hashlib.NET.Cryptographic
             dd = (dd << 10 | dd >> (32 - 10));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBlock(byte[] block, int startIndex)
         {
             uint aa = _ripemdState[0];
@@ -643,6 +681,7 @@ namespace Hashlib.NET.Cryptographic
             _ripemdState[0] = ddd;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBuffer()
         {
             // The input bytes are considered as bits strings, where the first bit is the most
