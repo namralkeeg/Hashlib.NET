@@ -40,7 +40,7 @@ namespace Hashlib.NET.Cryptographic
     /// SHA3 is based on a novel approach called sponge construction.
     /// https://en.wikipedia.org/wiki/SHA-3
     /// </remarks>
-    public sealed class SHA3 : HashAlgorithm, IBlockHash
+    public sealed class SHA3 : HashAlgorithm, ICryptographicBlockHash
     {
         #region Fields
 

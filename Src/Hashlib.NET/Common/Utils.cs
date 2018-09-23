@@ -25,11 +25,39 @@
 #endregion Copyright
 
 using System;
+using System.Security.Cryptography;
 
 namespace Hashlib.NET.Common
 {
     internal static class Utils
     {
+        #region Fields
+
+        private static volatile RNGCryptoServiceProvider _rng;
+
+        #endregion Fields
+
+        #region Constructors
+
+        static Utils()
+        {
+            _rng = new RNGCryptoServiceProvider();
+        }
+
+        #endregion Constructors
+
+        #region Cryptographic Methods
+
+        internal static byte[] GenerateRandomKey(int count)
+        {
+            byte[] randomBytes = new byte[count];
+            _rng.GetBytes(randomBytes);
+
+            return randomBytes;
+        }
+
+        #endregion Cryptographic Methods
+
         #region Byte Conversion Functions
 
         /// <summary>

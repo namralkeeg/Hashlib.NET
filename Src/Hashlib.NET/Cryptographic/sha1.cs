@@ -40,7 +40,7 @@ namespace Hashlib.NET.Cryptographic
     /// hexadecimal number, 40 digits long.
     /// https://en.wikipedia.org/wiki/SHA-1
     /// </remarks>
-    public sealed class SHA1 : HashAlgorithm, IBlockHash
+    public sealed class SHA1 : HashAlgorithm, ICryptographicBlockHash
     {
         #region Fields
 
