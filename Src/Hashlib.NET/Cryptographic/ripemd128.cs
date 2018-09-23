@@ -37,7 +37,7 @@ namespace Hashlib.NET.Cryptographic
     /// A RIPEMD 128-bit hash implementation of the <see cref="HashAlgorithm"/> class.
     /// </summary>
     /// <remarks> https://en.wikipedia.org/wiki/RIPEMD </remarks>
-    public class RIPEMD128 : HashAlgorithm, IBlockHash
+    public class RIPEMD128 : HashAlgorithm, ICryptographicBlockHash
     {
         #region Fields
 

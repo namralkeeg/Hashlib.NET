@@ -1,6 +1,6 @@
 ﻿namespace Hashlib.NET.Common
 {
-    internal interface IKeyedHash
+    public interface IKeyedHash : IHashAlgorithm
     {
         byte[] Key { get; set; }
     }

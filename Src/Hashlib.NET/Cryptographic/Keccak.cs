@@ -40,7 +40,7 @@ namespace Hashlib.NET.Cryptographic
     /// Keccak is based on a novel approach called sponge construction.
     /// https://en.wikipedia.org/wiki/SHA-3
     /// </remarks>
-    public sealed class Keccak : HashAlgorithm, IBlockHash
+    public sealed class Keccak : HashAlgorithm, ICryptographicBlockHash
     {
         #region Fields
 

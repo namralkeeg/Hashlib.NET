@@ -36,7 +36,7 @@ namespace Hashlib.NET.Cryptographic
     /// A SHA-2 256-bit hash implementation of the <see cref="HashAlgorithm"/> class.
     /// </summary>
     /// <remarks> https://en.wikipedia.org/wiki/SHA-2 </remarks>
-    public class SHA256 : HashAlgorithm, IBlockHash
+    public class SHA256 : HashAlgorithm, ICryptographicBlockHash
     {
         #region Fields
 

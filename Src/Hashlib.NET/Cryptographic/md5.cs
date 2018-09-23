@@ -25,6 +25,7 @@
 #endregion Copyright
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Hashlib.NET.Common;
 using static Hashlib.NET.Common.BitConverterEndian;
@@ -39,7 +40,7 @@ namespace Hashlib.NET.Cryptographic
     /// The MD5 message-digest algorithm is a widely used hash function producing a 128-bit hash value.
     /// https://en.wikipedia.org/wiki/MD5
     /// </remarks>
-    public sealed class MD5 : HashAlgorithm, IBlockHash
+    public sealed class MD5 : HashAlgorithm, ICryptographicBlockHash
     {
         #region Fields
 
@@ -210,6 +211,7 @@ namespace Hashlib.NET.Cryptographic
         /// </summary>
         /// <param name="block">The array of data to process.</param>
         /// <param name="startIndex">The index into the array to start at.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBlock(byte[] block, int startIndex)
         {
             // get last hash
@@ -327,6 +329,7 @@ namespace Hashlib.NET.Cryptographic
             _md5State[3] += d;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessBuffer()
         {
             // The input bytes are considered as bits strings, where the first bit is the most
