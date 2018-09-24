@@ -25,6 +25,7 @@
 #endregion Copyright
 
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace Hashlib.NET.Common
@@ -46,6 +47,12 @@ namespace Hashlib.NET.Common
 
         #endregion Constructors
 
+        #region Properties
+
+        internal static RNGCryptoServiceProvider StaticRNG => _rng;
+
+        #endregion Properties
+
         #region Cryptographic Methods
 
         internal static byte[] GenerateRandomKey(int count)
@@ -57,6 +64,81 @@ namespace Hashlib.NET.Common
         }
 
         #endregion Cryptographic Methods
+
+        #region Array Functions
+
+        /// <summary>
+        /// Generic function to create a shallow copy of a jagged array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">The source jagged array to copy from.</param>
+        /// <returns>A shallow copy of the jagged array provided.</returns>
+        internal static T[][] CopyArray<T>(T[][] source)
+        {
+            int length = source?.Length ?? 0;
+            T[][] destination = new T[length][];
+
+            for (var i = 0; i < length; ++i)
+            {
+                T[] innerArray = source[i];
+                int innerLength = innerArray.Length;
+                T[] newArray = new T[innerLength];
+                Array.Copy(innerArray, newArray, innerLength);
+                destination[i] = newArray;
+            }
+
+            return destination;
+        }
+
+        /// <summary>
+        /// Generic function to create a shallow copy of an array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">>The source array to copy from.</param>
+        /// <returns>A shallow copy of the array provided.</returns>
+        internal static T[] CopyArray<T>(T[] source)
+        {
+            int dataLength = source?.Length ?? 0;
+            T[] temp = new T[dataLength];
+            Array.Copy(source, 0, temp, 0, dataLength);
+
+            return temp;
+        }
+
+        internal static byte[] CopyArray(byte[] source)
+        {
+            byte[] temp = new byte[source.Length] ?? EmptyArray<byte>.Value;
+            Buffer.BlockCopy(source, 0, temp, 0, temp.Length);
+
+            return temp;
+        }
+
+        internal static void Fill<T>(T[] array, T value)
+        {
+            for (int i = 0; i < array.Length; ++i)
+            {
+                array[i] = value;
+            }
+        }
+
+        internal static void Fill<T>(IList<T> array, T value)
+        {
+            for (int i = 0; i < array.Count; ++i)
+            {
+                array[i] = value;
+            }
+        }
+
+        internal static class EmptyArray<T>
+        {
+            #region Fields
+
+            internal static readonly T[] Value = new T[0];
+
+            #endregion Fields
+        }
+
+        #endregion Array Functions
 
         #region Byte Conversion Functions
 
